@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Don't click fast 👀</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  font-family:sans-serif;
+  text-align:center;
+}
+
+.card {
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  max-width:420px;
+}
+
+h2 {
+  min-height:80px;
+}
+
+button {
+  margin-top:20px;
+  padding:10px 20px;
+  font-size:16px;
+  border:none;
+  border-radius:10px;
+  background:#ff6b81;
+  color:white;
+  cursor:pointer;
+  display:none;
+}
+
+button:hover {
+  background:#ff4757;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="tunetank-aesthetic-vlog-music-349779" type="audio/mpeg">
+</audio>
+
+<div class="card">
+  <h2 id="text"></h2>
+  <button id="btn" onclick="next()">Next</button>
+</div>
+
+<script>
+let step = 0;
+let musicStarted = false;
+
+const messages = [
+  { text: "Oi… don’t skip this 😤" },
+
+  { text: "Yeah you… the short angry one.", img: "cat.jpeg" },
+
+  { text: "Okay okay don’t get mad 😭\nJust read properly." },
+
+  { text: "2020 → Random hi\n2021 → Still talking\n2022 → Still tolerating your anger issues\n2023 → Still laughing\n2024 → Still dealing with you\n2025 → Still haven’t met… somehow still friends", img: "sunflower.jpeg" },
+
+  { text: "Which is actually kinda crazy.", img: "butterfly.jpeg" },
+
+  { text: "Because not everyone stays this long.\n\nThrough mood swings, and your 'I'm fine' lies 😄\n\nBut yeah… you're a really good friend.\n\nHappy Birthday Hammaam 🎂", img: "jasmine.png" }
+];
+
+function playMusic() {
+  if (!musicStarted) {
+    const music = document.getElementById("bgMusic");
+    music.play();
+    musicStarted = true;
+  }
+}
+
+function typeText(text, i = 0) {
+  const el = document.getElementById("text");
+  const btn = document.getElementById("btn");
+
+  btn.style.display = "none";
+
+  if (i < text.length) {
+    if(text.charAt(i) === "\n"){
+      el.innerHTML += "<br>";
+    } else {
+      el.innerHTML += text.charAt(i);
+    }
+    setTimeout(() => typeText(text, i + 1), 30);
+  } else {
+    btn.style.display = "inline-block";
+  }
+}
+
+function next() {
+  playMusic();
+
+  const el = document.getElementById("text");
+  const card = document.querySelector(".card");
+
+  el.innerHTML = "";
+  step++;
+
+  if(step < messages.length){
+    const current = messages[step];
+
+    const oldImg = document.getElementById("photo");
+    if(oldImg) oldImg.remove();
+
+    if(current.img){
+      const img = document.createElement("img");
+      img.src = current.img;
+      img.id = "photo";
+      img.style.width = "100%";
+      img.style.borderRadius = "15px";
+      img.style.marginBottom = "15px";
+      card.insertBefore(img, el);
+    }
+
+    typeText(current.text);
+
+    if(step === messages.length - 1){
+      document.getElementById("btn").innerText = "Click if you're not short";
+      document.getElementById("btn").onclick = celebrate;
+    }
+  }
+}
+
+function celebrate(){
+  confetti({
+    particleCount: 200,
+    spread: 100,
+    origin: { y: 0.6 }
+  });
+
+  setTimeout(() => {
+    alert("Page not found 🤭");
+  }, 600);
+}
+
+typeText(messages[0].text);
+</script>
+
+</body>
+</html>
